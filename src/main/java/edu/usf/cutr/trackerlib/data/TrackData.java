@@ -15,9 +15,53 @@
  */
 package edu.usf.cutr.trackerlib.data;
 
+import android.location.Location;
+
+import java.util.Date;
+
 public class TrackData {
 
-    private Double latitude;
+    private Location location;
 
-    private Double longitute;
+    private int dateTime;
+
+    public TrackData(Location location, int dateTime) {
+        this.location = location;
+        this.dateTime = dateTime;
+    }
+
+    public TrackData(double latitude, double longitude, double altitude, float speed, float bearing,
+                     int dateTime){
+        location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        location.setAltitude(altitude);
+        location.setSpeed(speed);
+        location.setBearing(bearing);
+        this.dateTime = dateTime;
+    }
+
+    public double getLatitude(){
+        return location.getLatitude();
+    }
+
+    public double getLongitude(){
+        return location.getLongitude();
+    }
+
+    public double getAltitude(){
+        return location.getAltitude();
+    }
+
+    public float getBearing(){
+        return location.getBearing();
+    }
+
+    public float getSpeed(){
+        return location.getSpeed();
+    }
+
+    public int getDateTime() {
+        return dateTime;
+    }
 }

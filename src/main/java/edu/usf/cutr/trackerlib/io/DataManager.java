@@ -15,9 +15,20 @@
  */
 package edu.usf.cutr.trackerlib.io;
 
+import java.util.List;
+
+import edu.usf.cutr.trackerlib.data.TrackData;
+
 /**
  * Created by cagryInside on 4/17/15.
  */
-public class DataManager {
+public interface DataManager {
 
+    public void saveTrackData(TrackData trackData);
+
+    public void saveAllTrackData(List<TrackData> trackDataList);
+
+    public List<TrackData> getAllTrackData();
+
+    public void wipeData();
 }

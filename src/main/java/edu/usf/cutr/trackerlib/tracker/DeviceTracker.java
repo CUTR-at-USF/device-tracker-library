@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 
 import edu.usf.cutr.trackerlib.location.LocationManager;
+import edu.usf.cutr.trackerlib.utils.Logger;
 
 /**
  * Created by cagricetin on 4/20/15.
@@ -49,6 +50,6 @@ public class DeviceTracker implements LocationManager.Callback{
 
     @Override
     public void onLocationChanged(Location location) {
-        location.getLatitude();
+        Logger.debug("Location update: " + location.toString());
     }
 }

@@ -7,9 +7,9 @@ import edu.usf.cutr.trackerlib.data.TrackData;
 /**
  * Created by cagricetin on 4/21/15.
  */
-public class TraccarServer extends BaseTrackerServer{
+public class TraccarServerImpl extends BaseTrackerServer{
 
-    public TraccarServer(String url) {
+    public TraccarServerImpl(String url) {
         super(url);
     }
 
