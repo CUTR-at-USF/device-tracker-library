@@ -9,21 +9,50 @@ public class TrackerConfig {
         REAL_TIME, BATCH;
     }
 
-    private String trackerServerUrl;
+    private String serverAddress;
+
+    private Integer serverPort;
 
     private TrackerType trackerType;
 
-    public TrackerConfig(String trackerServerUrl, TrackerType trackerType) {
-        this.trackerServerUrl = trackerServerUrl;
+    private String loginMessage;
+
+    private boolean useOnlyWifi = false;
+
+    /**
+     *
+     * @param serverAddress
+     * @param serverPort
+     * @param trackerType
+     * @param loginMessage
+     */
+    public TrackerConfig(String serverAddress, Integer serverPort, TrackerType trackerType,
+                         String loginMessage, boolean useOnlyWifi) {
+        this.serverAddress = serverAddress;
+        this.serverPort = serverPort;
         this.trackerType = trackerType;
+        this.loginMessage = loginMessage;
+        this.useOnlyWifi = useOnlyWifi;
     }
 
-    public String getTrackerServerUrl() {
-        return trackerServerUrl;
+    public TrackerConfig(boolean useOnlyWifi) {
+        this.useOnlyWifi = useOnlyWifi;
     }
 
-    public void setTrackerServerUrl(String trackerServerUrl) {
-        this.trackerServerUrl = trackerServerUrl;
+    public String getServerAddress() {
+        return serverAddress;
+    }
+
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
+    public Integer getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(Integer serverPort) {
+        this.serverPort = serverPort;
     }
 
     public TrackerType getTrackerType() {
@@ -32,5 +61,21 @@ public class TrackerConfig {
 
     public void setTrackerType(TrackerType trackerType) {
         this.trackerType = trackerType;
+    }
+
+    public String getLoginMessage() {
+        return loginMessage;
+    }
+
+    public void setLoginMessage(String loginMessage) {
+        this.loginMessage = loginMessage;
+    }
+
+    public boolean isUseOnlyWifi() {
+        return useOnlyWifi;
+    }
+
+    public void setUseOnlyWifi(boolean useOnlyWifi) {
+        this.useOnlyWifi = useOnlyWifi;
     }
 }

@@ -23,9 +23,9 @@ public class TrackData {
 
     private Location location;
 
-    private int dateTime;
+    private long dateTime;
 
-    public TrackData(Location location, int dateTime) {
+    public TrackData(Location location, long dateTime) {
         this.location = location;
         this.dateTime = dateTime;
     }
@@ -61,7 +61,11 @@ public class TrackData {
         return location.getSpeed();
     }
 
-    public int getDateTime() {
+    public long getDateTime() {
         return dateTime;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 }

@@ -37,7 +37,7 @@ public class DbConstants {
      * The altitude of the device location.
      * Type: DOUBLE
      */
-    protected static final String ALTITUDE = "longitude";
+    protected static final String ALTITUDE = "altitude";
 
     /**
      * The speed of the device.

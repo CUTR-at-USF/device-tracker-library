@@ -3,6 +3,7 @@ package edu.usf.cutr.trackerlib.tracker;
 import android.content.Context;
 import android.location.Location;
 
+import edu.usf.cutr.trackerlib.data.TrackerConfig;
 import edu.usf.cutr.trackerlib.location.LocationManager;
 import edu.usf.cutr.trackerlib.utils.Logger;
 
@@ -32,14 +33,16 @@ public class DeviceTracker implements LocationManager.Callback{
         trackerBehavior.initTracker();
     }
 
+    public void updateTrackerConfig(TrackerConfig trackerConfig){
+        trackerBehavior.updateTrackerConfig(trackerConfig);
+    }
+
     private void initLocationProvider() {
         locationManager = new LocationManager(applicationContext, this);
     }
 
     public void startTracker() {
         locationManager.startTracker();
-
-        trackerBehavior.startTracker();
     }
 
     public void stopTracker() {
@@ -48,8 +51,12 @@ public class DeviceTracker implements LocationManager.Callback{
         trackerBehavior.stopTracker();
     }
 
+    public void cancelTracker() {
+        trackerBehavior.cancelTracker();
+    }
+
     @Override
     public void onLocationChanged(Location location) {
-        Logger.debug("Location update: " + location.toString());
+        trackerBehavior.onLocationUpdate(location);
     }
 }

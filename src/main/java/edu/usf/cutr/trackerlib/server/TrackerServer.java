@@ -1,7 +1,6 @@
 package edu.usf.cutr.trackerlib.server;
 
-import java.util.List;
-
+import edu.usf.cutr.trackerlib.data.NMEASentence;
 import edu.usf.cutr.trackerlib.data.TrackData;
 
 /**
@@ -9,7 +8,21 @@ import edu.usf.cutr.trackerlib.data.TrackData;
  */
 public interface TrackerServer {
 
-    public void sendTrackData(TrackData trackData);
+    public String prepareLocationMessage(TrackData trackData);
 
-    public void sendAllTrackData(List<TrackData> trackDataList);
+    public String getLoginMessage();
+
+    public String getAddress();
+
+    public Integer getPort();
+
+    public String getUrl();
+
+    public ServerType getServerType();
+
+    public NMEASentence getNmeaSentence();
+
+    public boolean useWifiOnly();
+
+    public void setUseWifiOnly(boolean useWifiOnly);
 }

@@ -13,9 +13,7 @@ public class BatchBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 500 milliseconds
-        v.vibrate(500);
-        Toast.makeText(context, "sadsad", Toast.LENGTH_LONG).show();
+        Intent serviceIntent = new Intent(context, BatchUpdateService.class);
+        context.startService(serviceIntent);
     }
 }

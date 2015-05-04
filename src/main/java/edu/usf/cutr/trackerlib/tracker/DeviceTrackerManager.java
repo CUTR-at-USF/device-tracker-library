@@ -2,6 +2,7 @@ package edu.usf.cutr.trackerlib.tracker;
 
 import android.content.Context;
 
+import edu.usf.cutr.trackerlib.data.NMEASentence;
 import edu.usf.cutr.trackerlib.data.TrackerConfig;
 import edu.usf.cutr.trackerlib.server.TraccarServerImpl;
 import edu.usf.cutr.trackerlib.server.TrackerServer;
@@ -24,7 +25,7 @@ public class DeviceTrackerManager {
         //TODO: check if Google play services is active
 
         //Use traccar server as a server
-        TrackerServer trackerServer = new TraccarServerImpl(config.getTrackerServerUrl());
+        TrackerServer trackerServer = new TraccarServerImpl(config, NMEASentence.GPRMC);
 
         BaseTracker baseTracker;
         if (TrackerConfig.TrackerType.REAL_TIME.equals(config.getTrackerType())){
@@ -51,9 +52,20 @@ public class DeviceTrackerManager {
     public static void stopTracker() {
         if (deviceTracker != null) {
             deviceTracker.stopTracker();
-
             Logger.debug("Device tracking stopped");
         }
     }
 
+    public static void cancelTracker() {
+        if (deviceTracker != null) {
+            deviceTracker.cancelTracker();
+            Logger.debug("Device tracking cancelled");
+        }
+    }
+
+    public static void updateTrackerConfig(TrackerConfig trackerConfig){
+        if (deviceTracker != null) {
+            deviceTracker.updateTrackerConfig(trackerConfig);
+        }
+    }
 }
