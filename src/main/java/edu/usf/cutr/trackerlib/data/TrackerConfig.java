@@ -15,8 +15,6 @@ public class TrackerConfig {
 
     private TrackerType trackerType;
 
-    private String loginMessage;
-
     private boolean useOnlyWifi = false;
 
     /**
@@ -24,14 +22,12 @@ public class TrackerConfig {
      * @param serverAddress
      * @param serverPort
      * @param trackerType
-     * @param loginMessage
      */
     public TrackerConfig(String serverAddress, Integer serverPort, TrackerType trackerType,
-                         String loginMessage, boolean useOnlyWifi) {
+                          boolean useOnlyWifi) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.trackerType = trackerType;
-        this.loginMessage = loginMessage;
         this.useOnlyWifi = useOnlyWifi;
     }
 
@@ -61,14 +57,6 @@ public class TrackerConfig {
 
     public void setTrackerType(TrackerType trackerType) {
         this.trackerType = trackerType;
-    }
-
-    public String getLoginMessage() {
-        return loginMessage;
-    }
-
-    public void setLoginMessage(String loginMessage) {
-        this.loginMessage = loginMessage;
     }
 
     public boolean isUseOnlyWifi() {

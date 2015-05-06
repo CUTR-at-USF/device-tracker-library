@@ -1,5 +1,10 @@
 package edu.usf.cutr.trackerlib.server;
 
+import java.util.Calendar;
+import java.util.Formatter;
+import java.util.Locale;
+import java.util.TimeZone;
+
 import edu.usf.cutr.trackerlib.data.NMEASentence;
 import edu.usf.cutr.trackerlib.data.TrackData;
 import edu.usf.cutr.trackerlib.data.TrackerConfig;
@@ -7,7 +12,7 @@ import edu.usf.cutr.trackerlib.data.TrackerConfig;
 /**
  * Created by cagricetin on 4/21/15.
  */
-public class TraccarServerImpl implements TrackerServer{
+public class TraccarServerImpl implements TrackerServer {
 
     private TrackerConfig trackerConfig;
 
@@ -18,20 +23,60 @@ public class TraccarServerImpl implements TrackerServer{
         this.trackerConfig = trackerConfig;
     }
 
-    public TraccarServerImpl(String address, Integer port, String loginMessage,
-                             NMEASentence nmeaSentence, boolean useWifiOnly) {
+    public TraccarServerImpl(String address, Integer port,NMEASentence nmeaSentence,
+                             boolean useWifiOnly) {
         this.nmeaSentence = nmeaSentence;
-        TrackerConfig tc = new TrackerConfig(address, port, null, loginMessage, useWifiOnly);
+        this.trackerConfig = new TrackerConfig(address, port, null, useWifiOnly);
+    }
+
+    @Override
+    public String prepareLoginMessage(String id) {
+        StringBuilder s = new StringBuilder("$PGID,");
+        Formatter f = new Formatter(s, Locale.ENGLISH);
+
+        s.append(id);
+
+        byte checksum = 0;
+        for (byte b : s.substring(1).getBytes()) {
+            checksum ^= b;
+        }
+        f.format("*%02x\r\n", (int) checksum);
+        f.close();
+
+        return s.toString();
     }
 
     @Override
     public String prepareLocationMessage(TrackData trackData) {
-        return null;
-    }
+        if (NMEASentence.GPRMC.equals(nmeaSentence)){
+            StringBuilder s = new StringBuilder("$GPRMC,");
+            Formatter f = new Formatter(s, Locale.ENGLISH);
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"), Locale.ENGLISH);
+            calendar.setTimeInMillis(trackData.getTime());
 
-    @Override
-    public String getLoginMessage() {
-        return trackerConfig.getLoginMessage();
+            f.format("%1$tH%1$tM%1$tS.%1$tL,A,", calendar);
+
+            double lat = trackData.getLatitude();
+            double lon = trackData.getLongitude();
+            f.format("%02d%07.4f,%c,", (int) Math.abs(lat), Math.abs(lat) % 1 * 60, lat < 0 ? 'S' : 'N');
+            f.format("%03d%07.4f,%c,", (int) Math.abs(lon), Math.abs(lon) % 1 * 60, lon < 0 ? 'W' : 'E');
+
+            double speed = trackData.getSpeed() * 1.943844; // speed in knots
+            f.format("%.2f,%.2f,", speed, trackData.getBearing());
+            f.format("%1$td%1$tm%1$ty,,", calendar);
+
+            byte checksum = 0;
+            for (byte b : s.substring(1).getBytes()) {
+                checksum ^= b;
+            }
+            f.format("*%02x\r\n", (int) checksum);
+            f.close();
+
+            return s.toString();
+        } else {
+            //Implement other formats
+            return null;
+        }
     }
 
     @Override

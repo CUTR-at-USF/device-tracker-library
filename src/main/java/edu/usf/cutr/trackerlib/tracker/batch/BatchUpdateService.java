@@ -21,6 +21,8 @@ import edu.usf.cutr.trackerlib.io.network.ConnectionClient;
 import edu.usf.cutr.trackerlib.io.network.SocketConnectionManager;
 import edu.usf.cutr.trackerlib.server.TrackerServer;
 import edu.usf.cutr.trackerlib.utils.ConfigUtils;
+import edu.usf.cutr.trackerlib.utils.ConnectionUtils;
+import edu.usf.cutr.trackerlib.utils.DeviceUtils;
 import edu.usf.cutr.trackerlib.utils.LocationUtils;
 import edu.usf.cutr.trackerlib.utils.Logger;
 import edu.usf.cutr.trackerlib.utils.ServerUtils;
@@ -52,7 +54,9 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
 
         boolean isWifiUpdateOK = ConfigUtils.isWifiUpdateOK(connectionClient.getTrackerServer().
                         useWifiOnly(), getApplicationContext());
-        if (isWifiUpdateOK){
+        boolean isNetworkActive = ConnectionUtils.isNetworkActive(getApplicationContext());
+
+        if (isWifiUpdateOK && isNetworkActive){
             startBatchUpdate();
         } else {
             rescheduleBatchUpdate(getApplicationContext());
@@ -66,6 +70,9 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
         List<TrackData> trackDataList = dataManager.getAllTrackData();
         List<TrackData> decimatedTrackDataList = LocationUtils.decimate(
                 BatchUpdateConstants.DECIMATE_TOLERANCE, trackDataList);
+
+        String uuid = DeviceUtils.getDeviceId(getApplicationContext());
+        connectionClient.sendLoginMessage(uuid);
 
         connectionClient.sendAllTrackData(decimatedTrackDataList);
     }
@@ -105,7 +112,7 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
         date.set(Calendar.MINUTE, 0);
         date.set(Calendar.SECOND, 0);
         date.set(Calendar.MILLISECOND, 0);
-        date.add(Calendar.DATE, 1);
+        date.add(Calendar.DATE, 2);
         return date.getTimeInMillis();
     }
 }

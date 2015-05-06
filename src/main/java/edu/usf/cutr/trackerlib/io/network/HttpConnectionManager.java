@@ -5,30 +5,39 @@ import android.content.Context;
 import java.util.List;
 
 import edu.usf.cutr.trackerlib.data.TrackData;
+import edu.usf.cutr.trackerlib.server.TrackerServer;
 
 /**
  * Created by cagricetin on 4/27/15.
  */
-public class HttpConnectionManager implements ConnectionManager {
+public class HttpConnectionManager extends BaseConnectionManager {
 
-    private String url;
-
-    private Context applicationContext;
-
-    public HttpConnectionManager(String url, Context applicationContext) {
-        this.url = url;
-        this.applicationContext = applicationContext;
+    public HttpConnectionManager(ConnectionHandler handler) {
+        super(handler);
     }
 
     @Override
-    public void sendTrackData(TrackData trackData) {
-        //TODO: implement rest
+    public boolean isConnectionClosed() {
+        return false;
     }
 
     @Override
-    public void sendAllTrackDate(List<TrackData> trackDataList) {
-        for (TrackData td: trackDataList){
-            sendTrackData(td);
-        }
+    public boolean isConnectionBusy() {
+        return false;
+    }
+
+    @Override
+    public void send(String message) {
+
+    }
+
+    @Override
+    public void connect(String address, int port) {
+
+    }
+
+    @Override
+    public void disconnect() {
+
     }
 }

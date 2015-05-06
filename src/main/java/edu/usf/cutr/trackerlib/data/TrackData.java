@@ -23,22 +23,19 @@ public class TrackData {
 
     private Location location;
 
-    private long dateTime;
-
-    public TrackData(Location location, long dateTime) {
+    public TrackData(Location location) {
         this.location = location;
-        this.dateTime = dateTime;
     }
 
     public TrackData(double latitude, double longitude, double altitude, float speed, float bearing,
-                     int dateTime){
+                     long dateTime){
         location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
         location.setAltitude(altitude);
         location.setSpeed(speed);
         location.setBearing(bearing);
-        this.dateTime = dateTime;
+        location.setTime(dateTime);
     }
 
     public double getLatitude(){
@@ -61,8 +58,8 @@ public class TrackData {
         return location.getSpeed();
     }
 
-    public long getDateTime() {
-        return dateTime;
+    public long getTime() {
+        return location.getTime();
     }
 
     public Location getLocation() {

@@ -11,6 +11,8 @@ public interface TrackerBehavior {
 
     public void initTracker();
 
+    public void startTracker();
+
     public void stopTracker();
 
     public void cancelTracker();

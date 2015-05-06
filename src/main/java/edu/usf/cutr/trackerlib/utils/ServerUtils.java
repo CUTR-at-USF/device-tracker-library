@@ -17,8 +17,6 @@ public class ServerUtils {
 
     private static final String PORT = "port";
 
-    private static final String LOGIN_MESSAGE = "loginMessage";
-
     private static final String SERVER_TYPE = "serverType";
 
     private static final String NMEA_SENTENCE = "nmeaSentence";
@@ -28,7 +26,6 @@ public class ServerUtils {
     public static void saveServerInfo(TrackerServer trackerServer, Context context) {
         PreferenceHelper.saveString(context, ADDRESS, trackerServer.getAddress());
         PreferenceHelper.saveInt(context, PORT, trackerServer.getPort());
-        PreferenceHelper.saveString(context, LOGIN_MESSAGE, trackerServer.getLoginMessage());
         PreferenceHelper.saveString(context, SERVER_TYPE, trackerServer.getServerType().name());
         PreferenceHelper.saveBoolean(context, WIFI_ONLY, trackerServer.useWifiOnly());
 
@@ -41,14 +38,13 @@ public class ServerUtils {
         TrackerServer ts = null;
         String address = PreferenceHelper.getString(context, ADDRESS);
         Integer port = PreferenceHelper.getInteger(context, PORT);
-        String loginMessage = PreferenceHelper.getString(context, LOGIN_MESSAGE);
         boolean useWifiOnly = PreferenceHelper.getBoolean(context, WIFI_ONLY);
 
         String trackerType = PreferenceHelper.getString(context, SERVER_TYPE);
         if (ServerType.TRACCAR.name().equals(trackerType)){
             String nmeaSentenceName = PreferenceHelper.getString(context, NMEA_SENTENCE);
             NMEASentence nmeaSentence = Enum.valueOf(NMEASentence.class, nmeaSentenceName);
-            ts = new TraccarServerImpl(address, port, loginMessage, nmeaSentence, useWifiOnly);
+            ts = new TraccarServerImpl(address, port, nmeaSentence, useWifiOnly);
         }else {
             //Implement if other types of tracker servers used
         }

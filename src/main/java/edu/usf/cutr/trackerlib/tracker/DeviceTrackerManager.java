@@ -8,6 +8,7 @@ import edu.usf.cutr.trackerlib.server.TraccarServerImpl;
 import edu.usf.cutr.trackerlib.server.TrackerServer;
 import edu.usf.cutr.trackerlib.tracker.batch.BatchTrackerImpl;
 import edu.usf.cutr.trackerlib.tracker.realtime.RealTimeTrackerImpl;
+import edu.usf.cutr.trackerlib.utils.DeviceUtils;
 import edu.usf.cutr.trackerlib.utils.Logger;
 
 /**
@@ -20,12 +21,13 @@ public class DeviceTrackerManager {
      */
     private static DeviceTracker deviceTracker;
 
-    public static void init(TrackerConfig config, Context applicationContext) {
-
-        //TODO: check if Google play services is active
+    public static void init(TrackerConfig config, Context applicationContext, String uuid) {
 
         //Use traccar server as a server
         TrackerServer trackerServer = new TraccarServerImpl(config, NMEASentence.GPRMC);
+
+        //Save Unique device id
+        DeviceUtils.saveDeviceId(uuid, applicationContext);
 
         BaseTracker baseTracker;
         if (TrackerConfig.TrackerType.REAL_TIME.equals(config.getTrackerType())){

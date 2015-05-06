@@ -7,7 +7,8 @@ package edu.usf.cutr.trackerlib.data;
  */
 public enum NMEASentence {
     GPRMC("$GPRMC"), //minimum recommended data
-    GPAPB("$GPAPB"); // minimum recommended data when following a route
+    GPAPB("$GPAPB"), // minimum recommended data when following a route
+    GPGGA("$GPGGA");
 
     private final String desc;
 

@@ -34,6 +34,8 @@ public class LocationManager implements
 
     private Callback callback;
 
+    private boolean isConnected = false;
+
     public LocationManager(Context applicationContext, Callback callback) {
         this.callback = callback;
 
@@ -44,6 +46,8 @@ public class LocationManager implements
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+        mGoogleApiClient.connect();
     }
 
     private void createLocationRequest() {
@@ -70,16 +74,17 @@ public class LocationManager implements
     @Override
     public void onConnected(Bundle bundle) {
         startLocationUpdates();
+        isConnected = true;
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        isConnected = false;
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        isConnected = false;
     }
 
     private void startLocationUpdates() {
@@ -88,7 +93,9 @@ public class LocationManager implements
     }
 
     private void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+        if (isConnected){
+//            LocationServices.FusedLocationApi.removeLocationUpdates(
+//                    mGoogleApiClient, this);
+        }
     }
 }

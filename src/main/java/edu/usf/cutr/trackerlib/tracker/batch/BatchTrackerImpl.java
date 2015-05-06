@@ -31,11 +31,16 @@ public class BatchTrackerImpl extends BaseTracker {
     @Override
     public void initTracker() {
         boolean isBatchUpdateScheduled = getBatchUpdateScheduled();
-        if (isBatchUpdateScheduled) {
+//        if (!isBatchUpdateScheduled) {
             scheduleBatchUpdate();
-        }
+//        }
 
         ServerUtils.saveServerInfo(getTrackerServer(), getApplicationContext());
+    }
+
+    @Override
+    public void startTracker() {
+
     }
 
     @Override
@@ -51,7 +56,7 @@ public class BatchTrackerImpl extends BaseTracker {
 
     @Override
     public void onLocationUpdate(Location location) {
-        TrackData trackData = new TrackData(location, System.currentTimeMillis());
+        TrackData trackData = new TrackData(location);
         getDataManager().saveTrackData(trackData);
     }
 
@@ -96,9 +101,10 @@ public class BatchTrackerImpl extends BaseTracker {
         date.set(Calendar.MINUTE, 0);
         date.set(Calendar.SECOND, 0);
         date.set(Calendar.MILLISECOND, 0);
+        date.add(Calendar.DATE, 1);
 
-        return date.getTimeInMillis();
-//        System.currentTimeMillis() + (10 * 1000);
+//        return date.getTimeInMillis();
+        return System.currentTimeMillis() + (2 * 1000);
     }
 
     private void cancelBatchUpdate() {
@@ -118,14 +124,25 @@ public class BatchTrackerImpl extends BaseTracker {
     public boolean getBatchUpdateScheduled() {
         long updateTimeMillis = PreferenceHelper.getLong(getApplicationContext(),
                 BatchUpdateConstants.BATCH_UPDATE_TIME);
-        Calendar updateDate = GregorianCalendar.getInstance();
-        updateDate.setTimeInMillis(updateTimeMillis);
 
         Calendar todayDate = new GregorianCalendar();
+        todayDate.add(Calendar.DATE, 1);
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
 
-        String todayDateString = sdf.format(todayDate);
-        String updateDateString = sdf.format(updateDate);
+        String todayDateString;
+        try {
+            todayDateString = sdf.format(todayDate.getTime());
+        }catch (Exception e){
+            todayDateString = "";
+        }
+
+        String updateDateString;
+        try {
+            updateDateString = sdf.format(updateTimeMillis);
+        }catch (Exception e){
+            updateDateString = "";
+        }
 
         return todayDateString.equals(updateDateString);
     }

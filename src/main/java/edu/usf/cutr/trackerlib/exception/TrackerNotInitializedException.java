@@ -21,7 +21,6 @@ package edu.usf.cutr.trackerlib.exception;
 public class TrackerNotInitializedException extends Exception{
 
     public TrackerNotInitializedException(){
-        //TODO: set message from strings
-        super();
+        super("Tracker is not initialized");
     }
 }

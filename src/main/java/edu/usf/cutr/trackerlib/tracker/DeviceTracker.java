@@ -43,6 +43,8 @@ public class DeviceTracker implements LocationManager.Callback{
 
     public void startTracker() {
         locationManager.startTracker();
+
+        trackerBehavior.startTracker();
     }
 
     public void stopTracker() {

@@ -10,6 +10,7 @@ import edu.usf.cutr.trackerlib.io.network.ConnectionClient;
 import edu.usf.cutr.trackerlib.io.network.SocketConnectionManager;
 import edu.usf.cutr.trackerlib.server.TrackerServer;
 import edu.usf.cutr.trackerlib.tracker.BaseTracker;
+import edu.usf.cutr.trackerlib.utils.DeviceUtils;
 
 /**
  * Created by cagricetin on 4/20/15.
@@ -29,6 +30,12 @@ public class RealTimeTrackerImpl extends BaseTracker {
     }
 
     @Override
+    public void startTracker() {
+        String uuid = DeviceUtils.getDeviceId(getApplicationContext());
+        connectionClient.sendLoginMessage(uuid);
+    }
+
+    @Override
     public void stopTracker() {
         connectionClient.stopConnection();
     }
@@ -40,7 +47,7 @@ public class RealTimeTrackerImpl extends BaseTracker {
 
     @Override
     public void onLocationUpdate(Location location) {
-        TrackData trackData = new TrackData(location, System.currentTimeMillis());
+        TrackData trackData = new TrackData(location);
         connectionClient.sendTrackData(trackData);
     }
 

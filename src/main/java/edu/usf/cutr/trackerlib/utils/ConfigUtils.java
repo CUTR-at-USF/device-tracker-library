@@ -13,10 +13,7 @@ public class ConfigUtils {
         if (!useWifiOnly){
             return true;
         }else {
-            ConnectivityManager connManager = (ConnectivityManager) context.
-                    getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            return mWifi.isConnected();
+            return ConnectionUtils.isWifiActive(context);
         }
     }
 }

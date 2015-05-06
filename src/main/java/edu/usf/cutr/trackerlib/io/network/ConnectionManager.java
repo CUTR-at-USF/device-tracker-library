@@ -9,7 +9,13 @@ import edu.usf.cutr.trackerlib.data.TrackData;
  */
 public interface ConnectionManager {
 
-    public void sendTrackData(TrackData trackData);
+    public boolean isConnectionClosed();
 
-    public void sendAllTrackDate(List<TrackData> trackDataList);
+    public boolean isConnectionBusy();
+
+    public void send(String message);
+
+    public void connect(final String address, final int port);
+
+    public void disconnect();
 }

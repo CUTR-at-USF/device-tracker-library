@@ -14,7 +14,7 @@ import edu.usf.cutr.trackerlib.data.TrackData;
 /**
  * Created by cagricetin on 4/27/15.
  */
-public class TrackerDaoImpl extends SQLiteOpenHelper implements TrackerDao{
+public class TrackerDaoImpl extends SQLiteOpenHelper implements TrackerDao {
     /**
      * Data access object
      * Only accessible from io package
@@ -55,7 +55,7 @@ public class TrackerDaoImpl extends SQLiteOpenHelper implements TrackerDao{
     }
 
     @Override
-    public void saveTrackData(TrackData trackData){
+    public void saveTrackData(TrackData trackData) {
         SQLiteDatabase db = getWritableDatabase();
 
         // Create a new map of values, where column names are the keys
@@ -65,11 +65,13 @@ public class TrackerDaoImpl extends SQLiteOpenHelper implements TrackerDao{
         values.put(DbConstants.ALTITUDE, trackData.getAltitude());
         values.put(DbConstants.SPEED, trackData.getSpeed());
         values.put(DbConstants.BEARING, trackData.getBearing());
-        values.put(DbConstants.DATETIME, trackData.getDateTime());
+        values.put(DbConstants.DATETIME, trackData.getTime());
+
+        db.insert(DbConstants.TABLE_NAME, null, values);
     }
 
     @Override
-    public List<TrackData> getAllTrackData(){
+    public List<TrackData> getAllTrackData() {
         SQLiteDatabase db = getReadableDatabase();
 
         List<TrackData> trackDataList = new ArrayList<>();
@@ -77,27 +79,26 @@ public class TrackerDaoImpl extends SQLiteOpenHelper implements TrackerDao{
         //Select all entries in db and order by time
         Cursor cursor = db.rawQuery("Select * from " + DbConstants.TABLE_NAME + " order by " +
                 DbConstants.DATETIME + " DESC", null);
+        if (cursor.moveToFirst()) {
+            do {
+                double latitude = cursor.getDouble(cursor.getColumnIndex(DbConstants.LATITUDE));
+                double longitude = cursor.getDouble(cursor.getColumnIndex(DbConstants.LONGITUDE));
+                double altitude = cursor.getDouble(cursor.getColumnIndex(DbConstants.ALTITUDE));
+                float bearing = cursor.getFloat(cursor.getColumnIndex(DbConstants.BEARING));
+                float speed = cursor.getFloat(cursor.getColumnIndex(DbConstants.SPEED));
+                int dateTime = cursor.getInt(cursor.getColumnIndex(DbConstants.DATETIME));
 
-        while (cursor.isAfterLast() == false) {
-            double latitude = cursor.getDouble(cursor.getColumnIndex(DbConstants.LATITUDE));
-            double longitude = cursor.getDouble(cursor.getColumnIndex(DbConstants.LONGITUDE));
-            double altitude = cursor.getDouble(cursor.getColumnIndex(DbConstants.ALTITUDE));
-            float bearing = cursor.getFloat(cursor.getColumnIndex(DbConstants.BEARING));
-            float speed = cursor.getFloat(cursor.getColumnIndex(DbConstants.SPEED));
-            int dateTime = cursor.getInt(cursor.getColumnIndex(DbConstants.DATETIME));
-
-            TrackData td = new TrackData(latitude, longitude, altitude, speed, bearing, dateTime);
-            trackDataList.add(td);
-
-            cursor.moveToNext();
+                TrackData td = new TrackData(latitude, longitude, altitude, speed, bearing, dateTime);
+                trackDataList.add(td);
+            } while (cursor.moveToNext());
         }
 
         return trackDataList;
     }
 
     @Override
-    public void deleteAllData(){
+    public void deleteAllData() {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("delete from "+ DbConstants.TABLE_NAME);
+        db.execSQL("delete from " + DbConstants.TABLE_NAME);
     }
 }

@@ -8,9 +8,9 @@ import edu.usf.cutr.trackerlib.data.TrackData;
  */
 public interface TrackerServer {
 
-    public String prepareLocationMessage(TrackData trackData);
+    public String prepareLoginMessage(String id);
 
-    public String getLoginMessage();
+    public String prepareLocationMessage(TrackData trackData);
 
     public String getAddress();
 
