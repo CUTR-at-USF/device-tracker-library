@@ -1,14 +1,14 @@
 package edu.usf.cutr.trackerlib.io.network;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.List;
 
-import edu.usf.cutr.trackerlib.data.TrackData;
-import edu.usf.cutr.trackerlib.server.TrackerServer;
 import edu.usf.cutr.trackerlib.utils.Logger;
 
 /**
@@ -79,40 +79,66 @@ public class SocketConnectionManager extends BaseConnectionManager {
     }
 
     @Override
-    public void send(String message) {
+    public void send(final String message) {
         connectionBusy = true;
+////TODO: switch to traditional threads
+//        new AsyncTask<String, Void, Boolean>() {
+//
+//            @Override
+//            protected Boolean doInBackground(String... params) {
+//                try {
+//                    socketStream.write(params[0].getBytes());
+//                    socketStream.flush();
+//                    return true;
+//                } catch (Exception e) {
+//                    return false;
+//                }
+//            }
+//
+//            @Override
+//            protected void onCancelled() {
+//                if (!connectionClosed) {
+//                    connectionBusy = false;
+//                    getHandler().onSent(false);
+//                }
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Boolean result) {
+//                if (!connectionClosed) {
+//                    connectionBusy = false;
+//                    getHandler().onSent(result);
+//                }
+//            }
+//
+//        }.execute(message);
 
-        new AsyncTask<String, Void, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(String... params) {
+        new Thread(new Runnable() {
+            private static final String THREAD_MESSAGE = "result";
+            public void run() {
+                Message returnMessage = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(THREAD_MESSAGE, true);
                 try {
-                    socketStream.write(params[0].getBytes());
+                    socketStream.write(message.getBytes());
                     socketStream.flush();
-                    return true;
                 } catch (Exception e) {
-                    return false;
+                    bundle.putBoolean(THREAD_MESSAGE, false);
                 }
+                returnMessage.setData(bundle);
+                handler.sendMessage(returnMessage);
             }
 
-            @Override
-            protected void onCancelled() {
-                if (!connectionClosed) {
+            private Handler handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
                     connectionBusy = false;
-                    getHandler().onSent(false);
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (!connectionClosed) {
-                    connectionBusy = false;
+                    super.handleMessage(msg);
+                    boolean result = msg.getData().getBoolean(THREAD_MESSAGE);
                     getHandler().onSent(result);
                 }
-            }
-
-        }.execute(message);
-
+            };
+        }).start();
     }
 
     @Override

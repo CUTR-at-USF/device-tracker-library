@@ -37,7 +37,9 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
     public void onCreate() {
         TrackerServer trackerServer = ServerUtils.loadServerInfo(getApplicationContext());
         BaseConnectionManager cm = new SocketConnectionManager();
+
         connectionClient = new ConnectionClient(cm, trackerServer, getApplicationContext());
+        connectionClient.setCallback(this);
 
         dataManager = new DataManagerImpl(getApplicationContext());
 
@@ -90,7 +92,7 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
         long updateDateMillis = createBatchUpdateTimeForTomorrowMillis();
 
         Intent intent = new Intent(getApplicationContext(), BatchBroadcastReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 BatchUpdateConstants.BATCH_PROCESS_REQUEST_CODE, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().
@@ -101,7 +103,7 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
         Logger.verbose("Batch update scheduled");
 
         //Save current update time
-        PreferenceHelper.saveLong(getApplicationContext(), BatchUpdateConstants.BATCH_UPDATE_TIME,
+        PreferenceHelper.saveLong(context, BatchUpdateConstants.BATCH_UPDATE_TIME,
                 updateDateMillis);
     }
 

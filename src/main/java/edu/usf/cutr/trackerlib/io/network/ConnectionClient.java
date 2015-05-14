@@ -15,13 +15,16 @@ import edu.usf.cutr.trackerlib.server.TrackerServer;
  */
 public class ConnectionClient implements BaseConnectionManager.ConnectionHandler {
 
-
     private static final long RECONNECT_DELAY = 10 * 1000;
     private ConnectionManager connectionManager;
     private TrackerServer trackerServer;
     private Queue<String> messageQueue;
     private Context applicationContext;
     private Callback callback;
+
+    public interface Callback {
+        public void onSendFinished();
+    }
 
     public ConnectionClient(BaseConnectionManager connectionManager, TrackerServer trackerServer,
                             Context applicationContext) {
@@ -121,9 +124,5 @@ public class ConnectionClient implements BaseConnectionManager.ConnectionHandler
 
     public TrackerServer getTrackerServer() {
         return trackerServer;
-    }
-
-    public interface Callback {
-        public void onSendFinished();
     }
 }

@@ -104,7 +104,7 @@ public class BatchTrackerImpl extends BaseTracker {
         date.add(Calendar.DATE, 1);
 
 //        return date.getTimeInMillis();
-        return System.currentTimeMillis() + (2 * 1000);
+        return System.currentTimeMillis() + (3 * 1000);
     }
 
     private void cancelBatchUpdate() {

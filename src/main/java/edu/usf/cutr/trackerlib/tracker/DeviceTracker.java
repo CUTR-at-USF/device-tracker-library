@@ -5,7 +5,6 @@ import android.location.Location;
 
 import edu.usf.cutr.trackerlib.data.TrackerConfig;
 import edu.usf.cutr.trackerlib.location.LocationManager;
-import edu.usf.cutr.trackerlib.utils.Logger;
 
 /**
  * Created by cagricetin on 4/20/15.
