@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">TrackerLib</string>
+
+    <string name="analytics_action_init">app_init</string>
+    <string name="analytics_action_trace">app_trace</string>
+
+    <string name="analytics_label_init_tracking">Device tracking initialized</string>
+    <string name="analytics_label_start_tracking">Device tracking started</string>
+    <string name="analytics_label_stop_tracking">Device tracking stopped</string>
+    <string name="analytics_label_cancel_tracking">Device tracking cancelled</string>
+    <string name="analytics_label_location_update">Location updated:</string>
 </resources>

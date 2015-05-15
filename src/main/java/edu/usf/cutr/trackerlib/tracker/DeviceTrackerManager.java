@@ -4,6 +4,7 @@ import android.content.Context;
 
 import edu.usf.cutr.trackerlib.data.NMEASentence;
 import edu.usf.cutr.trackerlib.data.TrackerConfig;
+import edu.usf.cutr.trackerlib.io.TrackerAnalytics;
 import edu.usf.cutr.trackerlib.server.TraccarServerImpl;
 import edu.usf.cutr.trackerlib.server.TrackerServer;
 import edu.usf.cutr.trackerlib.tracker.batch.BatchTrackerImpl;
@@ -41,6 +42,16 @@ public class DeviceTrackerManager {
         deviceTracker.initTracker();
 
         Logger.debug("Trackerlib initialized");
+    }
+
+    /**
+     * Optional Google analytics implementation
+     * Starts events when initialized
+     * @param applicationContext
+     * @param trackerId
+     */
+    public static void initAnalytics(Context applicationContext, String trackerId){
+        TrackerAnalytics.init(applicationContext, trackerId);
     }
 
     public static void startTracker(){

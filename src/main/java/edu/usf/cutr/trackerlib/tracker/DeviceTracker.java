@@ -3,7 +3,9 @@ package edu.usf.cutr.trackerlib.tracker;
 import android.content.Context;
 import android.location.Location;
 
+import edu.usf.cutr.trackerlib.R;
 import edu.usf.cutr.trackerlib.data.TrackerConfig;
+import edu.usf.cutr.trackerlib.io.TrackerAnalytics;
 import edu.usf.cutr.trackerlib.location.LocationManager;
 
 /**
@@ -30,6 +32,10 @@ public class DeviceTracker implements LocationManager.Callback{
         initLocationProvider();
 
         trackerBehavior.initTracker();
+
+        TrackerAnalytics.reportEventWithCategory(TrackerAnalytics.EventCategory.APP_SETTINGS.toString(),
+                applicationContext.getString(R.string.analytics_action_init),
+                applicationContext.getString(R.string.analytics_label_init_tracking));
     }
 
     public void updateTrackerConfig(TrackerConfig trackerConfig){
@@ -44,20 +50,37 @@ public class DeviceTracker implements LocationManager.Callback{
         locationManager.startTracker();
 
         trackerBehavior.startTracker();
+
+        TrackerAnalytics.reportEventWithCategory(TrackerAnalytics.EventCategory.APP_SETTINGS.toString(),
+                applicationContext.getString(R.string.analytics_action_init),
+                applicationContext.getString(R.string.analytics_label_start_tracking));
     }
 
     public void stopTracker() {
         locationManager.stopTracker();
 
         trackerBehavior.stopTracker();
+
+        TrackerAnalytics.reportEventWithCategory(TrackerAnalytics.EventCategory.APP_SETTINGS.toString(),
+                applicationContext.getString(R.string.analytics_action_init),
+                applicationContext.getString(R.string.analytics_label_stop_tracking));
     }
 
     public void cancelTracker() {
         trackerBehavior.cancelTracker();
+
+        TrackerAnalytics.reportEventWithCategory(TrackerAnalytics.EventCategory.APP_SETTINGS.toString(),
+                applicationContext.getString(R.string.analytics_action_init),
+                applicationContext.getString(R.string.analytics_label_cancel_tracking));
     }
 
     @Override
     public void onLocationChanged(Location location) {
         trackerBehavior.onLocationUpdate(location);
+
+        TrackerAnalytics.reportEventWithCategory(TrackerAnalytics.EventCategory.TRACE.toString(),
+                applicationContext.getString(R.string.analytics_action_trace),
+                applicationContext.getString(R.string.analytics_label_location_update) +
+        " lat:" +location.getLatitude() + " - long:" + location.getLongitude() );
     }
 }
