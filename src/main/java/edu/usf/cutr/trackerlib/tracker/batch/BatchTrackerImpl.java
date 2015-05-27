@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.usf.cutr.trackerlib.tracker.batch;
 
 import android.app.AlarmManager;
@@ -20,7 +35,7 @@ import edu.usf.cutr.trackerlib.utils.Logger;
 import edu.usf.cutr.trackerlib.utils.ServerUtils;
 
 /**
- * Created by cagricetin on 4/20/15.
+ * Batch tracker implementation
  */
 public class BatchTrackerImpl extends BaseTracker {
 
@@ -28,19 +43,23 @@ public class BatchTrackerImpl extends BaseTracker {
         super(trackerServer, applicationContext);
     }
 
+    /**
+     * inits tracker and schedules a batch update
+     */
     @Override
     public void initTracker() {
-        boolean isBatchUpdateScheduled = getBatchUpdateScheduled();
+//        boolean isBatchUpdateScheduled = getBatchUpdateScheduled();
 //        if (!isBatchUpdateScheduled) {
             scheduleBatchUpdate();
 //        }
 
+        // Save server information for future use
         ServerUtils.saveServerInfo(getTrackerServer(), getApplicationContext());
     }
 
     @Override
     public void startTracker() {
-
+        // Do nothing
     }
 
     @Override
@@ -63,7 +82,6 @@ public class BatchTrackerImpl extends BaseTracker {
     @Override
     public void updateTrackerConfig(TrackerConfig trackerConfig) {
         getTrackerServer().setUseWifiOnly(trackerConfig.isUseOnlyWifi());
-
         ServerUtils.saveServerInfo(getTrackerServer(), getApplicationContext());
     }
 
@@ -71,8 +89,12 @@ public class BatchTrackerImpl extends BaseTracker {
         scheduleBatchUpdate(-1);
     }
 
+    /**
+     * Schedules a batch update for given time
+     * @param updateDateMillis takes current time in millis
+     */
     private void scheduleBatchUpdate(long updateDateMillis) {
-
+        // Creates batch update for at the and of the day
         if (updateDateMillis == -1){
             updateDateMillis = createBatchUpdateTimeMillis();
         }
@@ -93,6 +115,10 @@ public class BatchTrackerImpl extends BaseTracker {
                 updateDateMillis);
     }
 
+    /**
+     * Creates batch update for at the and of the day
+     * @return schedule time
+     */
     private long createBatchUpdateTimeMillis() {
         // today
         Calendar date = new GregorianCalendar();
@@ -107,6 +133,9 @@ public class BatchTrackerImpl extends BaseTracker {
         return System.currentTimeMillis() + (3 * 1000);
     }
 
+    /**
+     * Cancels the batch update and removes all data
+     */
     private void cancelBatchUpdate() {
         cancelScheduledBatchUpdate();
         getDataManager().wipeData();
@@ -121,7 +150,11 @@ public class BatchTrackerImpl extends BaseTracker {
         alarmManager.cancel(sender);
     }
 
-    public boolean getBatchUpdateScheduled() {
+    /**
+     *
+     * @return if there is already batch update scheduled for today
+     */
+    public boolean isBatchUpdateScheduled() {
         long updateTimeMillis = PreferenceHelper.getLong(getApplicationContext(),
                 BatchUpdateConstants.BATCH_UPDATE_TIME);
 

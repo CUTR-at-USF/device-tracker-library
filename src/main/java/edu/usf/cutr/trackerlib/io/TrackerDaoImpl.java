@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.usf.cutr.trackerlib.io;
 
 import android.content.ContentValues;
@@ -11,9 +26,6 @@ import java.util.List;
 
 import edu.usf.cutr.trackerlib.data.TrackData;
 
-/**
- * Created by cagricetin on 4/27/15.
- */
 public class TrackerDaoImpl extends SQLiteOpenHelper implements TrackerDao {
     /**
      * Data access object
@@ -46,7 +58,7 @@ public class TrackerDaoImpl extends SQLiteOpenHelper implements TrackerDao {
                 DbConstants.ALTITUDE + " DOUBLE NOT NULL," +
                 DbConstants.SPEED + " REAL NOT NULL," +
                 DbConstants.BEARING + " REAL NOT NULL," +
-                DbConstants.DATETIME + " INT NOT NULL" +
+                DbConstants.DATETIME + " VARCHAR NOT NULL" +
                 ");");
     }
 
@@ -65,7 +77,7 @@ public class TrackerDaoImpl extends SQLiteOpenHelper implements TrackerDao {
         values.put(DbConstants.ALTITUDE, trackData.getAltitude());
         values.put(DbConstants.SPEED, trackData.getSpeed());
         values.put(DbConstants.BEARING, trackData.getBearing());
-        values.put(DbConstants.DATETIME, trackData.getTime());
+        values.put(DbConstants.DATETIME, String.valueOf(trackData.getTime()));
 
         db.insert(DbConstants.TABLE_NAME, null, values);
     }
@@ -86,12 +98,14 @@ public class TrackerDaoImpl extends SQLiteOpenHelper implements TrackerDao {
                 double altitude = cursor.getDouble(cursor.getColumnIndex(DbConstants.ALTITUDE));
                 float bearing = cursor.getFloat(cursor.getColumnIndex(DbConstants.BEARING));
                 float speed = cursor.getFloat(cursor.getColumnIndex(DbConstants.SPEED));
-                int dateTime = cursor.getInt(cursor.getColumnIndex(DbConstants.DATETIME));
+                String dateTimeString = cursor.getString(cursor.getColumnIndex(DbConstants.DATETIME));
+                Long dateTime = Long.valueOf(dateTimeString);
 
                 TrackData td = new TrackData(latitude, longitude, altitude, speed, bearing, dateTime);
                 trackDataList.add(td);
             } while (cursor.moveToNext());
         }
+        cursor.close();
 
         return trackDataList;
     }

@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.usf.cutr.trackerlib.tracker;
 
 import android.content.Context;
@@ -9,7 +24,7 @@ import edu.usf.cutr.trackerlib.io.TrackerAnalytics;
 import edu.usf.cutr.trackerlib.location.LocationManager;
 
 /**
- * Created by cagricetin on 4/20/15.
+ * Controls location tracking events
  */
 public class DeviceTracker implements LocationManager.Callback{
 
@@ -19,15 +34,19 @@ public class DeviceTracker implements LocationManager.Callback{
 
     private LocationManager locationManager;
 
+    /**
+     * Only can be used by library objects
+     * @param trackerBehavior takes tracker behavior (batch or real-time)
+     * @param applicationContext takes app context
+     */
     protected DeviceTracker(TrackerBehavior trackerBehavior, Context applicationContext) {
         this.trackerBehavior = trackerBehavior;
         this.applicationContext = applicationContext;
     }
 
-    public void setTrackerBehavior(TrackerBehavior trackerBehavior) {
-        this.trackerBehavior = trackerBehavior;
-    }
-
+    /**
+     * Initialize trackers and location tracking systems
+     */
     public void initTracker() {
         initLocationProvider();
 
@@ -38,6 +57,10 @@ public class DeviceTracker implements LocationManager.Callback{
                 applicationContext.getString(R.string.analytics_label_init_tracking));
     }
 
+    /**
+     * Updates tracker configs
+     * @param trackerConfig takes config object
+     */
     public void updateTrackerConfig(TrackerConfig trackerConfig){
         trackerBehavior.updateTrackerConfig(trackerConfig);
     }
@@ -77,10 +100,5 @@ public class DeviceTracker implements LocationManager.Callback{
     @Override
     public void onLocationChanged(Location location) {
         trackerBehavior.onLocationUpdate(location);
-
-        TrackerAnalytics.reportEventWithCategory(TrackerAnalytics.EventCategory.TRACE.toString(),
-                applicationContext.getString(R.string.analytics_action_trace),
-                applicationContext.getString(R.string.analytics_label_location_update) +
-        " lat:" +location.getLatitude() + " - long:" + location.getLongitude() );
     }
 }

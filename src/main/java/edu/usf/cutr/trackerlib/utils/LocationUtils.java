@@ -1,4 +1,3 @@
-package edu.usf.cutr.trackerlib.utils;
 /*
  * Copyright 2008 Google Inc.
  *
@@ -14,6 +13,7 @@ package edu.usf.cutr.trackerlib.utils;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package edu.usf.cutr.trackerlib.utils;
 
 import android.location.Location;
 

@@ -1,27 +1,56 @@
+/*
+ * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.usf.cutr.trackerlib.data;
 
 /**
- *
+ * Config object for tracker library
  */
 public class TrackerConfig {
 
+    /**
+     * Used to determine gow the library push the location
+     * Batch or Real-time
+     */
     public enum TrackerType {
-        REAL_TIME, BATCH;
+        REAL_TIME, BATCH
     }
 
+    /**
+     * Address of the server
+     */
     private String serverAddress;
 
+    /**
+     * Port of the server
+     */
     private Integer serverPort;
 
+    /**
+     * BATCH or REAL_TIME update
+     */
     private TrackerType trackerType;
 
     private boolean useOnlyWifi = false;
 
     /**
      *
-     * @param serverAddress
-     * @param serverPort
-     * @param trackerType
+     * @param serverAddress Address of the server
+     * @param serverPort Port of the server
+     * @param trackerType BATCH or REAL_TIME update
+     * @param useOnlyWifi Use only wifi to submit locations to the server
      */
     public TrackerConfig(String serverAddress, Integer serverPort, TrackerType trackerType,
                           boolean useOnlyWifi) {

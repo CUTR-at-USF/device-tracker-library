@@ -1,22 +1,33 @@
+/*
+ * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.usf.cutr.trackerlib.io;
 
 import android.content.Context;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 /**
- * Created by cagricetin on 5/15/15.
+ * Google analytics implementation for device tracking lib
  */
 public class TrackerAnalytics {
 
-    private static String trackerId;
-
-    private static Context applicationContext;
-
     private static Tracker tracker;
-
 
     /**
      * Event categories for segmentation
@@ -26,7 +37,7 @@ public class TrackerAnalytics {
         TRACE("trace"), LOCATION_UPDATE("location_update"), APP_SETTINGS("app_settings");
         private final String stringValue;
 
-        private EventCategory(final String s) {
+        EventCategory(final String s) {
             stringValue = s;
         }
 
@@ -36,11 +47,11 @@ public class TrackerAnalytics {
     }
 
     public static void init(Context applicationContext, String trackerId) {
-        TrackerAnalytics.trackerId = trackerId;
-        TrackerAnalytics.applicationContext = applicationContext;
-
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(applicationContext);
+        analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
+
         tracker = analytics.newTracker(trackerId);
+        tracker.setSampleRate(20);
     }
 
     /**

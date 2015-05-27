@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.usf.cutr.trackerlib.io.network;
 
 import android.os.AsyncTask;
@@ -12,7 +27,8 @@ import java.net.Socket;
 import edu.usf.cutr.trackerlib.utils.Logger;
 
 /**
- * Created by cagricetin on 4/28/15.
+ * Connection manager implementation for submitting locations
+ * Protocol: TCP
  */
 public class SocketConnectionManager extends BaseConnectionManager {
 
@@ -81,38 +97,6 @@ public class SocketConnectionManager extends BaseConnectionManager {
     @Override
     public void send(final String message) {
         connectionBusy = true;
-////TODO: switch to traditional threads
-//        new AsyncTask<String, Void, Boolean>() {
-//
-//            @Override
-//            protected Boolean doInBackground(String... params) {
-//                try {
-//                    socketStream.write(params[0].getBytes());
-//                    socketStream.flush();
-//                    return true;
-//                } catch (Exception e) {
-//                    return false;
-//                }
-//            }
-//
-//            @Override
-//            protected void onCancelled() {
-//                if (!connectionClosed) {
-//                    connectionBusy = false;
-//                    getHandler().onSent(false);
-//                }
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Boolean result) {
-//                if (!connectionClosed) {
-//                    connectionBusy = false;
-//                    getHandler().onSent(result);
-//                }
-//            }
-//
-//        }.execute(message);
-
         new Thread(new Runnable() {
             private static final String THREAD_MESSAGE = "result";
             public void run() {

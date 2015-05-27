@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.usf.cutr.trackerlib.tracker.batch;
 
 import android.app.AlarmManager;
@@ -27,6 +42,9 @@ import edu.usf.cutr.trackerlib.utils.LocationUtils;
 import edu.usf.cutr.trackerlib.utils.Logger;
 import edu.usf.cutr.trackerlib.utils.ServerUtils;
 
+/**
+ * Service for pushing locations to server
+ */
 public class BatchUpdateService extends Service implements ConnectionClient.Callback {
 
     private ConnectionClient connectionClient;
@@ -69,11 +87,14 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
     }
 
     private void startBatchUpdate() {
+        // Get all the location updates
         List<TrackData> trackDataList = dataManager.getAllTrackData();
+        // Apply Douglas-Peucker algorithm
         List<TrackData> decimatedTrackDataList = LocationUtils.decimate(
                 BatchUpdateConstants.DECIMATE_TOLERANCE, trackDataList);
 
         String uuid = DeviceUtils.getDeviceId(getApplicationContext());
+        // Create a login message for the server
         connectionClient.sendLoginMessage(uuid);
 
         connectionClient.sendAllTrackData(decimatedTrackDataList);
@@ -88,7 +109,6 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
     }
 
     private void rescheduleBatchUpdate(Context context) {
-
         long updateDateMillis = createBatchUpdateTimeForTomorrowMillis();
 
         Intent intent = new Intent(getApplicationContext(), BatchBroadcastReceiver.class);

@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.usf.cutr.trackerlib.tracker;
 
 import android.content.Context;
@@ -22,8 +37,13 @@ public class DeviceTrackerManager {
      */
     private static DeviceTracker deviceTracker;
 
+    /**
+     * Initialize device tracker, needed to be called when the application starts
+     * @param config Tracker config object contains ip address of the server
+     * @param applicationContext Android application context
+     * @param uuid unique identifier for the device
+     */
     public static void init(TrackerConfig config, Context applicationContext, String uuid) {
-
         //Use traccar server as a server
         TrackerServer trackerServer = new TraccarServerImpl(config, NMEASentence.GPRMC);
 
@@ -47,21 +67,27 @@ public class DeviceTrackerManager {
     /**
      * Optional Google analytics implementation
      * Starts events when initialized
-     * @param applicationContext
-     * @param trackerId
+     * @param applicationContext Android application context
+     * @param trackerId Google analytics tracker id
      */
     public static void initAnalytics(Context applicationContext, String trackerId){
         TrackerAnalytics.init(applicationContext, trackerId);
     }
 
+    /**
+     * Starts tracker
+     */
     public static void startTracker(){
         if (deviceTracker != null) {
             deviceTracker.startTracker();
-
             Logger.debug("Device tracking started");
         }
     }
 
+    /**
+     * Stops tracker
+     * If tracker configured with batch updates, keeps the batch updates
+     */
     public static void stopTracker() {
         if (deviceTracker != null) {
             deviceTracker.stopTracker();
@@ -69,6 +95,9 @@ public class DeviceTrackerManager {
         }
     }
 
+    /**
+     * Stops the tracker and also cancels the batch updates
+     */
     public static void cancelTracker() {
         if (deviceTracker != null) {
             deviceTracker.cancelTracker();

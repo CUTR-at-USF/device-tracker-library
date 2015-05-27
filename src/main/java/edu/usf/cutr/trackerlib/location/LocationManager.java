@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package edu.usf.cutr.trackerlib.location;
 
 import android.content.Context;
@@ -6,14 +21,13 @@ import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 /**
- * Created by cagricetin on 4/21/15.
+ * Manages location tracking events
+ * Implements Fused location listeners
  */
 public class LocationManager implements
         LocationListener,
@@ -22,7 +36,12 @@ public class LocationManager implements
 
     public interface Callback {
 
-        public void onLocationChanged(Location location);
+        /**
+         * Location change callback
+         * Tracks devices location
+         * @param location default location object
+         */
+        void onLocationChanged(Location location);
     }
 
     //Fastest location update interval set to 30 seconds
@@ -36,6 +55,11 @@ public class LocationManager implements
 
     private boolean isConnected = false;
 
+    /**
+     * Init location manager
+     * @param applicationContext takes app context
+     * @param callback for the location updates
+     */
     public LocationManager(Context applicationContext, Callback callback) {
         this.callback = callback;
 
@@ -56,10 +80,16 @@ public class LocationManager implements
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
     }
 
+    /**
+     * starts location updates
+     */
     public void startTracker() {
         mGoogleApiClient.connect();
     }
 
+    /**
+     * stops location updates
+     */
     public void stopTracker() {
         mGoogleApiClient.disconnect();
 
@@ -88,14 +118,13 @@ public class LocationManager implements
     }
 
     private void startLocationUpdates() {
-        PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
+        LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
     }
 
     private void stopLocationUpdates() {
         if (isConnected){
-//            LocationServices.FusedLocationApi.removeLocationUpdates(
-//                    mGoogleApiClient, this);
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
 }

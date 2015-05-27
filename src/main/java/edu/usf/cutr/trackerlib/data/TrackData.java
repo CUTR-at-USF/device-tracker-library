@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2015 University of South Florida (cagricetin@mail.usf.edu).
+ * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,8 +17,18 @@ package edu.usf.cutr.trackerlib.data;
 
 import android.location.Location;
 
-import java.util.Date;
-
+/**
+ * TrackData is the model object for data to track
+ *
+ * Data to track:
+ * -> Location
+ *      -> latitude
+ *      -> longitude
+ *      -> altitude
+ *      -> speed
+ *      -> bearing
+ *      -> dateTime
+ */
 public class TrackData {
 
     private Location location;
@@ -28,7 +38,7 @@ public class TrackData {
     }
 
     public TrackData(double latitude, double longitude, double altitude, float speed, float bearing,
-                     long dateTime){
+                     long dateTime) {
         location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
@@ -38,23 +48,23 @@ public class TrackData {
         location.setTime(dateTime);
     }
 
-    public double getLatitude(){
+    public double getLatitude() {
         return location.getLatitude();
     }
 
-    public double getLongitude(){
+    public double getLongitude() {
         return location.getLongitude();
     }
 
-    public double getAltitude(){
+    public double getAltitude() {
         return location.getAltitude();
     }
 
-    public float getBearing(){
+    public float getBearing() {
         return location.getBearing();
     }
 
-    public float getSpeed(){
+    public float getSpeed() {
         return location.getSpeed();
     }
 
