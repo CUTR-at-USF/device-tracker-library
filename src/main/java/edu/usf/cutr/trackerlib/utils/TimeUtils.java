@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.usf.cutr.trackerlib.tracker.batch;
+package edu.usf.cutr.trackerlib.utils;
 
-public class BatchUpdateConstants {
-
-    public static final int BATCH_PROCESS_REQUEST_CODE = 1234;
-    public static final String BATCH_UPDATE_TIME = "batchUpdateTime";
+public class TimeUtils {
 
     /**
-     * Location decimate tolerance in meters
-     * Used to ignore reporting close location points
+     * Creates batch update for two hours later
+     * @return schedule time
      */
-        public static final double TRACK_DISTANCE_THRESHOLD = 10;
+    public static long createBatchUpdateTimeMillis() {
+        //Add two hours
+        long twoHourMillis = 2*60*60*1000;
+        // Test data
+//        twoHourMillis = (10 * 1000);
+        return System.currentTimeMillis() + twoHourMillis;
+    }
 }

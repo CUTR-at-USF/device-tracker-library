@@ -23,8 +23,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import edu.usf.cutr.trackerlib.data.TrackData;
@@ -41,6 +39,7 @@ import edu.usf.cutr.trackerlib.utils.DeviceUtils;
 import edu.usf.cutr.trackerlib.utils.LocationUtils;
 import edu.usf.cutr.trackerlib.utils.Logger;
 import edu.usf.cutr.trackerlib.utils.ServerUtils;
+import edu.usf.cutr.trackerlib.utils.TimeUtils;
 
 /**
  * Service for pushing locations to server
@@ -73,7 +72,7 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         boolean isWifiUpdateOK = ConfigUtils.isWifiUpdateOK(connectionClient.getTrackerServer().
-                        useWifiOnly(), getApplicationContext());
+                useWifiOnly(), getApplicationContext());
         boolean isNetworkActive = ConnectionUtils.isNetworkActive(getApplicationContext());
 
         if (isWifiUpdateOK && isNetworkActive){
@@ -89,9 +88,15 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
     private void startBatchUpdate() {
         // Get all the location updates
         List<TrackData> trackDataList = dataManager.getAllTrackData();
+
+        Double trackDistanceThreshold = BatchUpdateConstants.TRACK_DISTANCE_THRESHOLD;
+        if (connectionClient.getTrackerServer().getTrackDistanceThreshold() != null){
+            trackDistanceThreshold = connectionClient.getTrackerServer().getTrackDistanceThreshold()
+                    .doubleValue();
+        }
         // Apply Douglas-Peucker algorithm
         List<TrackData> decimatedTrackDataList = LocationUtils.decimate(
-                BatchUpdateConstants.DECIMATE_TOLERANCE, trackDataList);
+                trackDistanceThreshold, trackDataList);
 
         String uuid = DeviceUtils.getDeviceId(getApplicationContext());
         // Create a login message for the server
@@ -102,14 +107,17 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
 
     @Override
     public void onSendFinished() {
-        connectionClient.stopConnection();
+        // Reschedule batch update periodically
+        rescheduleBatchUpdate(getApplicationContext());
 
+        // Stop service elements
+        connectionClient.stopConnection();
         dataManager.wipeData();
         stopSelf();
     }
 
     private void rescheduleBatchUpdate(Context context) {
-        long updateDateMillis = createBatchUpdateTimeForTomorrowMillis();
+        long updateDateMillis = TimeUtils.createBatchUpdateTimeMillis();
 
         Intent intent = new Intent(getApplicationContext(), BatchBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
@@ -125,16 +133,5 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
         //Save current update time
         PreferenceHelper.saveLong(context, BatchUpdateConstants.BATCH_UPDATE_TIME,
                 updateDateMillis);
-    }
-
-    private long createBatchUpdateTimeForTomorrowMillis() {
-        Calendar date = new GregorianCalendar();
-        // reset hour, minutes, seconds and millis
-        date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.MINUTE, 0);
-        date.set(Calendar.SECOND, 0);
-        date.set(Calendar.MILLISECOND, 0);
-        date.add(Calendar.DATE, 2);
-        return date.getTimeInMillis();
     }
 }

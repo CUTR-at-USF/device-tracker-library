@@ -40,9 +40,9 @@ public class TraccarServerImpl implements TrackerServer {
     }
 
     public TraccarServerImpl(String address, Integer port,NMEASentence nmeaSentence,
-                             boolean useWifiOnly) {
+                             boolean useWifiOnly, Integer trackDistanceThreshold) {
         this.nmeaSentence = nmeaSentence;
-        this.trackerConfig = new TrackerConfig(address, port, null, useWifiOnly);
+        this.trackerConfig = new TrackerConfig(address, port, null, useWifiOnly, trackDistanceThreshold);
     }
 
     @Override
@@ -118,6 +118,11 @@ public class TraccarServerImpl implements TrackerServer {
     @Override
     public NMEASentence getNmeaSentence() {
         return nmeaSentence;
+    }
+
+    @Override
+    public Integer getTrackDistanceThreshold() {
+        return trackerConfig.getTrackDistanceThreshold();
     }
 
     @Override

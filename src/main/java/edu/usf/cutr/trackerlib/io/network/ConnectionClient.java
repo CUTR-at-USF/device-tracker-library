@@ -40,7 +40,7 @@ public class ConnectionClient implements BaseConnectionManager.ConnectionHandler
     private Callback callback;
 
     public interface Callback {
-        public void onSendFinished();
+        void onSendFinished();
     }
 
     public ConnectionClient(BaseConnectionManager connectionManager, TrackerServer trackerServer,

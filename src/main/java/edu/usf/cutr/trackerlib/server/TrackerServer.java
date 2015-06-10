@@ -37,6 +37,8 @@ public interface TrackerServer {
 
     NMEASentence getNmeaSentence();
 
+    Integer getTrackDistanceThreshold();
+
     boolean useWifiOnly();
 
     void setUseWifiOnly(boolean useWifiOnly);

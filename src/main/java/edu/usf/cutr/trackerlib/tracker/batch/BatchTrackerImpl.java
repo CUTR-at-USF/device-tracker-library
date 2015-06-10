@@ -22,10 +22,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import edu.usf.cutr.trackerlib.data.TrackData;
 import edu.usf.cutr.trackerlib.data.TrackerConfig;
 import edu.usf.cutr.trackerlib.io.PreferenceHelper;
@@ -33,6 +29,7 @@ import edu.usf.cutr.trackerlib.server.TrackerServer;
 import edu.usf.cutr.trackerlib.tracker.BaseTracker;
 import edu.usf.cutr.trackerlib.utils.Logger;
 import edu.usf.cutr.trackerlib.utils.ServerUtils;
+import edu.usf.cutr.trackerlib.utils.TimeUtils;
 
 /**
  * Batch tracker implementation
@@ -48,10 +45,9 @@ public class BatchTrackerImpl extends BaseTracker {
      */
     @Override
     public void initTracker() {
-//        boolean isBatchUpdateScheduled = getBatchUpdateScheduled();
-//        if (!isBatchUpdateScheduled) {
+        if (!isBatchUpdateScheduled()) {
             scheduleBatchUpdate();
-//        }
+        }
 
         // Save server information for future use
         ServerUtils.saveServerInfo(getTrackerServer(), getApplicationContext());
@@ -96,7 +92,7 @@ public class BatchTrackerImpl extends BaseTracker {
     private void scheduleBatchUpdate(long updateDateMillis) {
         // Creates batch update for at the and of the day
         if (updateDateMillis == -1){
-            updateDateMillis = createBatchUpdateTimeMillis();
+            updateDateMillis = TimeUtils.createBatchUpdateTimeMillis();
         }
 
         Intent intent = new Intent(getApplicationContext(), BatchBroadcastReceiver.class);
@@ -113,24 +109,6 @@ public class BatchTrackerImpl extends BaseTracker {
         //Save current update time
         PreferenceHelper.saveLong(getApplicationContext(), BatchUpdateConstants.BATCH_UPDATE_TIME,
                 updateDateMillis);
-    }
-
-    /**
-     * Creates batch update for at the and of the day
-     * @return schedule time
-     */
-    private long createBatchUpdateTimeMillis() {
-        // today
-        Calendar date = new GregorianCalendar();
-        // reset hour, minutes, seconds and millis
-        date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.MINUTE, 0);
-        date.set(Calendar.SECOND, 0);
-        date.set(Calendar.MILLISECOND, 0);
-        date.add(Calendar.DATE, 1);
-
-//        return date.getTimeInMillis();
-        return System.currentTimeMillis() + (3 * 1000);
     }
 
     /**
@@ -151,32 +129,12 @@ public class BatchTrackerImpl extends BaseTracker {
     }
 
     /**
-     *
-     * @return if there is already batch update scheduled for today
+     * @return if there is already batch update scheduled
      */
     public boolean isBatchUpdateScheduled() {
         long updateTimeMillis = PreferenceHelper.getLong(getApplicationContext(),
                 BatchUpdateConstants.BATCH_UPDATE_TIME);
-
-        Calendar todayDate = new GregorianCalendar();
-        todayDate.add(Calendar.DATE, 1);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
-
-        String todayDateString;
-        try {
-            todayDateString = sdf.format(todayDate.getTime());
-        }catch (Exception e){
-            todayDateString = "";
-        }
-
-        String updateDateString;
-        try {
-            updateDateString = sdf.format(updateTimeMillis);
-        }catch (Exception e){
-            updateDateString = "";
-        }
-
-        return todayDateString.equals(updateDateString);
+        long currentTimeMillis = System.currentTimeMillis();
+        return (currentTimeMillis - updateTimeMillis) < 0;
     }
 }

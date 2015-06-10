@@ -43,6 +43,11 @@ public class TrackerConfig {
      */
     private TrackerType trackerType;
 
+    /**
+     * Optional track distance threshold
+     */
+    private Integer trackDistanceThreshold = -1;
+
     private boolean useOnlyWifi = false;
 
     /**
@@ -58,6 +63,23 @@ public class TrackerConfig {
         this.serverPort = serverPort;
         this.trackerType = trackerType;
         this.useOnlyWifi = useOnlyWifi;
+    }
+
+    /**
+     *
+     * @param serverAddress Address of the server
+     * @param serverPort Port of the server
+     * @param trackerType BATCH or REAL_TIME update
+     * @param useOnlyWifi Use only wifi to submit locations to the server
+     * @param trackDistanceThreshold Use to decimate locations on batch update
+     */
+    public TrackerConfig(String serverAddress, Integer serverPort, TrackerType trackerType,
+                          boolean useOnlyWifi, Integer trackDistanceThreshold) {
+        this.serverAddress = serverAddress;
+        this.serverPort = serverPort;
+        this.trackerType = trackerType;
+        this.useOnlyWifi = useOnlyWifi;
+        this.trackDistanceThreshold = trackDistanceThreshold;
     }
 
     public TrackerConfig(boolean useOnlyWifi) {
@@ -95,4 +117,13 @@ public class TrackerConfig {
     public void setUseOnlyWifi(boolean useOnlyWifi) {
         this.useOnlyWifi = useOnlyWifi;
     }
+
+    public Integer getTrackDistanceThreshold() {
+        return trackDistanceThreshold;
+    }
+
+    public void setTrackDistanceThreshold(Integer trackDistanceThreshold) {
+        this.trackDistanceThreshold = trackDistanceThreshold;
+    }
+
 }

@@ -38,10 +38,13 @@ public class ServerUtils {
 
     private static final String WIFI_ONLY = "wifiOnly";
 
+    private static final String DISTANCE_THRESHOLD = "trackDistanceThreshold";
+
     public static void saveServerInfo(TrackerServer trackerServer, Context context) {
         PreferenceHelper.saveString(context, ADDRESS, trackerServer.getAddress());
         PreferenceHelper.saveInt(context, PORT, trackerServer.getPort());
         PreferenceHelper.saveString(context, SERVER_TYPE, trackerServer.getServerType().name());
+        PreferenceHelper.saveInt(context, DISTANCE_THRESHOLD, trackerServer.getTrackDistanceThreshold());
         PreferenceHelper.saveBoolean(context, WIFI_ONLY, trackerServer.useWifiOnly());
 
         if (trackerServer.getServerType().equals(ServerType.TRACCAR)){
@@ -55,11 +58,14 @@ public class ServerUtils {
         Integer port = PreferenceHelper.getInteger(context, PORT);
         boolean useWifiOnly = PreferenceHelper.getBoolean(context, WIFI_ONLY);
 
+        Integer trackDistanceThreshold = PreferenceHelper.getInteger(context, DISTANCE_THRESHOLD);
+        trackDistanceThreshold = (trackDistanceThreshold == -1) ? null : trackDistanceThreshold;
+
         String trackerType = PreferenceHelper.getString(context, SERVER_TYPE);
         if (ServerType.TRACCAR.name().equals(trackerType)){
             String nmeaSentenceName = PreferenceHelper.getString(context, NMEA_SENTENCE);
             NMEASentence nmeaSentence = Enum.valueOf(NMEASentence.class, nmeaSentenceName);
-            ts = new TraccarServerImpl(address, port, nmeaSentence, useWifiOnly);
+            ts = new TraccarServerImpl(address, port, nmeaSentence, useWifiOnly, trackDistanceThreshold);
         }else {
             //Implement if other types of tracker servers used
         }
