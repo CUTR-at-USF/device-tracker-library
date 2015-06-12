@@ -16,6 +16,7 @@
 package edu.usf.cutr.trackerlib.tracker.batch;
 
 import android.app.AlarmManager;
+import android.app.IntentService;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -44,11 +45,18 @@ import edu.usf.cutr.trackerlib.utils.TimeUtils;
 /**
  * Service for pushing locations to server
  */
-public class BatchUpdateService extends Service implements ConnectionClient.Callback {
+public class BatchUpdateService extends IntentService implements ConnectionClient.Callback {
 
     private ConnectionClient connectionClient;
 
     private DataManager dataManager;
+
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     */
+    public BatchUpdateService() {
+        super("BatchUpdateService");
+    }
 
     @Override
     public void onCreate() {
@@ -69,8 +77,7 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
+    protected void onHandleIntent(Intent intent) {
         boolean isWifiUpdateOK = ConfigUtils.isWifiUpdateOK(connectionClient.getTrackerServer().
                 useWifiOnly(), getApplicationContext());
         boolean isNetworkActive = ConnectionUtils.isNetworkActive(getApplicationContext());
@@ -81,8 +88,6 @@ public class BatchUpdateService extends Service implements ConnectionClient.Call
             rescheduleBatchUpdate(getApplicationContext());
             stopSelf();
         }
-
-        return Service.START_STICKY;
     }
 
     private void startBatchUpdate() {

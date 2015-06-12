@@ -25,7 +25,7 @@ public class TimeUtils {
         //Add two hours
         long twoHourMillis = 2*60*60*1000;
         // Test data
-//        twoHourMillis = (10 * 1000);
+//        twoHourMillis = (60*10 * 1000);
         return System.currentTimeMillis() + twoHourMillis;
     }
 }
