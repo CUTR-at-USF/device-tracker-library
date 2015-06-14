@@ -1,5 +1,8 @@
 # DeviceTrackerLib
 
+[![Build Status](https://travis-ci.org/CUTR-at-USF/device-tracker-library.svg?branch=master)](https://travis-ci.org/CUTR-at-USF/device-tracker-library)
+
+
 Android device tracker library is an Android library that enables devices to send their location
 information. After initializing this library, it will automatically start sending location information to given server.
 As a GPS tracking server, Traccar server was used. Traccar (http://traccar.org/) is an open source GPS tracking server application.
