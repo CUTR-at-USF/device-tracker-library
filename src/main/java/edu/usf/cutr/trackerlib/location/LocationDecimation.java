@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.usf.cutr.trackerlib.utils;
+package edu.usf.cutr.trackerlib.location;
 
-public class TimeUtils {
+import java.util.List;
 
-    /**
-     * Creates batch update for two hours later
-     * @return schedule time
-     */
-    public static long createBatchUpdateTimeMillis() {
-        //Add two hours
-        long twoHourMillis = 2*60*60*1000;
-        // Test data
-        twoHourMillis = (60 * 1000);
-        return System.currentTimeMillis() + twoHourMillis;
-    }
+import edu.usf.cutr.trackerlib.data.TrackData;
+
+public interface LocationDecimation {
+
+    List<TrackData> decimate(double tolerance, List<TrackData> trackDataList);
 }

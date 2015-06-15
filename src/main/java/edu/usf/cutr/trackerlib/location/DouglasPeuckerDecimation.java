@@ -1,5 +1,6 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright 2008 Google Inc., 2015 Cagri Cetin (cagricetin@mail.usf.edu),
+ * University of South Florida
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package edu.usf.cutr.trackerlib.utils;
+package edu.usf.cutr.trackerlib.location;
 
 import android.location.Location;
 
@@ -22,21 +23,12 @@ import java.util.List;
 import java.util.Stack;
 
 import edu.usf.cutr.trackerlib.data.TrackData;
+import edu.usf.cutr.trackerlib.utils.Logger;
 
-/**
- * Utility class for decimating tracks at a given level of precision.
- *
- * @author Leif Hendrik Wilden
- */
-public class LocationUtils {
+public class DouglasPeuckerDecimation implements LocationDecimation {
 
     // multiplication factor to convert degrees to radians
     public static final double DEG_TO_RAD = Math.PI / 180.0;
-    private static final String TAG = LocationUtils.class.getSimpleName();
-
-    private LocationUtils() {
-
-    }
 
     /**
      * Computes the distance on the two sphere between the point c0 and the line
@@ -47,7 +39,7 @@ public class LocationUtils {
      * @param c2 the end of the lone segment
      * @return the distance in m (assuming spherical earth)
      */
-    private static double distance(final Location c0, final Location c1, final Location c2) {
+    private double distance(final Location c0, final Location c1, final Location c2) {
         if (c1.equals(c2)) {
             return c2.distanceTo(c0);
         }
@@ -86,7 +78,8 @@ public class LocationUtils {
      * @param trackDataList input location array
      * @return output location array
      */
-    public static List<TrackData> decimate(double tolerance, List<TrackData> trackDataList) {
+    @Override
+    public List<TrackData> decimate(double tolerance, List<TrackData> trackDataList) {
 
         List<TrackData> decimatedTrackDataList = new ArrayList<>();
 
@@ -111,8 +104,7 @@ public class LocationUtils {
                 current = stack.pop();
                 maxDist = 0;
                 for (idx = current[0] + 1; idx < current[1]; ++idx) {
-                    dist = LocationUtils.distance(
-                            trackDataList.get(idx).getLocation(),
+                    dist = distance(trackDataList.get(idx).getLocation(),
                             trackDataList.get(current[0]).getLocation(),
                             trackDataList.get(current[1]).getLocation());
                     if (dist > maxDist) {
@@ -143,19 +135,5 @@ public class LocationUtils {
         Logger.debug("Decimating " + n + " points to " + i + " w/ tolerance = " + tolerance);
 
         return decimatedTrackDataList;
-    }
-
-    /**
-     * Checks if a given location is a valid (i.e. physically possible) location
-     * on Earth. Note: The special separator locations (which have latitude = 100)
-     * will not qualify as valid. Neither will locations with lat=0 and lng=0 as
-     * these are most likely "bad" measurements which often cause trouble.
-     *
-     * @param location the location to test
-     * @return true if the location is a valid location.
-     */
-    public static boolean isValidLocation(Location location) {
-        return location != null && Math.abs(location.getLatitude()) <= 90
-                && Math.abs(location.getLongitude()) <= 180;
     }
 }

@@ -18,11 +18,9 @@ package edu.usf.cutr.trackerlib.tracker.batch;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -33,11 +31,12 @@ import edu.usf.cutr.trackerlib.io.PreferenceHelper;
 import edu.usf.cutr.trackerlib.io.network.BaseConnectionManager;
 import edu.usf.cutr.trackerlib.io.network.ConnectionClient;
 import edu.usf.cutr.trackerlib.io.network.SocketConnectionManager;
+import edu.usf.cutr.trackerlib.location.DouglasPeuckerDecimation;
+import edu.usf.cutr.trackerlib.location.LocationDecimation;
 import edu.usf.cutr.trackerlib.server.TrackerServer;
 import edu.usf.cutr.trackerlib.utils.ConfigUtils;
 import edu.usf.cutr.trackerlib.utils.ConnectionUtils;
 import edu.usf.cutr.trackerlib.utils.DeviceUtils;
-import edu.usf.cutr.trackerlib.utils.LocationUtils;
 import edu.usf.cutr.trackerlib.utils.Logger;
 import edu.usf.cutr.trackerlib.utils.ServerUtils;
 import edu.usf.cutr.trackerlib.utils.TimeUtils;
@@ -50,6 +49,8 @@ public class BatchUpdateService extends IntentService implements ConnectionClien
     private ConnectionClient connectionClient;
 
     private DataManager dataManager;
+
+    private LocationDecimation locationDecimation;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -67,6 +68,8 @@ public class BatchUpdateService extends IntentService implements ConnectionClien
         connectionClient.setCallback(this);
 
         dataManager = new DataManagerImpl(getApplicationContext());
+
+        locationDecimation = new DouglasPeuckerDecimation();
 
         super.onCreate();
     }
@@ -100,7 +103,7 @@ public class BatchUpdateService extends IntentService implements ConnectionClien
                     .doubleValue();
         }
         // Apply Douglas-Peucker algorithm
-        List<TrackData> decimatedTrackDataList = LocationUtils.decimate(
+        List<TrackData> decimatedTrackDataList = locationDecimation.decimate(
                 trackDistanceThreshold, trackDataList);
 
         String uuid = DeviceUtils.getDeviceId(getApplicationContext());
@@ -129,10 +132,9 @@ public class BatchUpdateService extends IntentService implements ConnectionClien
                 BatchUpdateConstants.BATCH_PROCESS_REQUEST_CODE, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().
-                getSystemService(getApplicationContext().ALARM_SERVICE);
+                getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC, updateDateMillis, pendingIntent);
 
-        Toast.makeText(getApplicationContext(), "Batch update scheduled", Toast.LENGTH_LONG);
         Logger.verbose("Batch update scheduled");
 
         //Save current update time

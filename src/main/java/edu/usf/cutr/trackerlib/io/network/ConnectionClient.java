@@ -78,7 +78,7 @@ public class ConnectionClient implements BaseConnectionManager.ConnectionHandler
     }
 
     private void sendMessages() {
-        if (!connectionManager.isConnectionClosed() && !connectionManager.isConnectionBusy()) {
+            if (!connectionManager.isConnectionClosed() && !connectionManager.isConnectionBusy()) {
             connectionManager.send(messageQueue.poll());
         }
     }
