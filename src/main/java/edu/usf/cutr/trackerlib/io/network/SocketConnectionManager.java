@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ * Copyright (C) 2015 University of South Florida (cagricetin@mail.usf.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,7 +91,6 @@ public class SocketConnectionManager extends BaseConnectionManager {
             }
 
         }.execute();
-
     }
 
     @Override

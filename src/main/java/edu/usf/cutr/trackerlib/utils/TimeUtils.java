@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Cagri Cetin (cagricetin@mail.usf.edu), University of South Florida
+ * Copyright (C) 2015 University of South Florida (cagricetin@mail.usf.edu)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,23 @@
  */
 package edu.usf.cutr.trackerlib.utils;
 
+import edu.usf.cutr.trackerlib.BuildConfig;
+
 public class TimeUtils {
 
     /**
      * Creates batch update for two hours later
+     *
      * @return schedule time
      */
     public static long createBatchUpdateTimeMillis() {
         //Add two hours
-        long twoHourMillis = 2*60*60*1000;
-        // Test data
-        twoHourMillis = (60 * 1000);
+        long twoHourMillis = 2 * 60 * 60 * 1000;
+
+        if (BuildConfig.DEBUG) {
+            // Set batch update time period to a minute on DEBUG mode
+            twoHourMillis = (60 * 1000);
+        }
         return System.currentTimeMillis() + twoHourMillis;
     }
 }
