@@ -49,7 +49,7 @@ DeviceTrackerManager.initAnalytics(getApplicationContext(), "XXX");
 ```
 
 
-### Sampe usage
+### Sample usage
 ```
 /*
 * Initialize device tracker library
@@ -70,7 +70,7 @@ DeviceTrackerManager.initAnalytics(getApplicationContext(), "XXX");
     }
 ```
 
-### LICENCE
+### LICENSE
 
 ```
 /*
