@@ -15,20 +15,20 @@ This library requires three permissions:
 
 ```
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 ```
 
 Add this into the  ```build.gradle``` file:
 
 ```
-    //user tracker library
-    compile project (':trackerlib')
+// Add tracker library
+compile project (':trackerlib')
 ```
 
 ##Usage
 
-To initialize the library, the following need to be done in your ```Application``` class:
+To initialize the library, the following need to be added in your `Application` class:
 
 Tracker initialize:
 
@@ -54,20 +54,20 @@ DeviceTrackerManager.initAnalytics(getApplicationContext(), "XXX");
 /*
 * Initialize device tracker library
 */
-    public void initDeviceTracker() {
-            boolean useWifiOnly =  false;
-            //Create a Tracker config with ip, port, Tracker type
-            TrackerConfig tc = new TrackerConfig("xxx.xxx.xx.x", 5005, TrackerConfig.TrackerType.BATCH,
-                    useWifiOnly);
+public void initDeviceTracker() {
+        boolean useWifiOnly =  false;
+        //Create a Tracker config with ip, port, Tracker type
+        TrackerConfig tc = new TrackerConfig("xxx.xxx.xx.x", 5005, TrackerConfig.TrackerType.BATCH,
+                useWifiOnly);
 
-            String uuid = mPrefs.getString(APP_UID, null);
+        String uuid = mPrefs.getString(APP_UID, null);
 
-            DeviceTrackerManager.init(tc, getApplicationContext(), uuid);
+        DeviceTrackerManager.init(tc, getApplicationContext(), uuid);
 
-            DeviceTrackerManager.startTracker();
+        DeviceTrackerManager.startTracker();
 
-            DeviceTrackerManager.initAnalytics(context, "XXX");
-    }
+        DeviceTrackerManager.initAnalytics(context, "XXX");
+}
 ```
 
 ### LICENSE
