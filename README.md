@@ -16,7 +16,7 @@ This library requires three permissions:
 ```
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
 Add this into the  ```build.gradle``` file:
