@@ -7,7 +7,7 @@ Android device tracker library is an Android library that enables devices to sen
 information. After initializing this library, it will automatically start sending location information to given server.
 As a GPS tracking server, Traccar server was used. Traccar (http://traccar.org/) is an open source GPS tracking server application.
 
-##Installation
+## Installation
 
 In order to use the DeviceTrackerLib in your Android application the following need to be done in the ```Android Studio```
 
@@ -26,7 +26,7 @@ Add this into the  ```build.gradle``` file:
 compile project (':trackerlib')
 ```
 
-##Usage
+## Usage
 
 To initialize the library, the following need to be added in your `Application` class:
 
@@ -74,7 +74,7 @@ public void initDeviceTracker() {
 
 ```
 /*
- * Copyright (C) 2015 University of South Florida (cagricetin@mail.usf.edu)
+ * Copyright (C) 2015-2018 University of South Florida (cagricetin@mail.usf.edu, sjbarbeau@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
