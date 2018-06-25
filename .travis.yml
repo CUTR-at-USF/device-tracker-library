@@ -27,11 +27,7 @@ android:
     - extra-android-m2repository
 
 before_install:
-  - yes | sdkmanager "platforms;android-27"
-
-install:
-  - chmod +x gradlew
-  - true
+  - yes | sdkmanager "platforms;android-21"
 
 script:
-  - ./gradlew assemble -PdisablePreDex
+  - ./gradlew assembleDebug -PdisablePreDex
